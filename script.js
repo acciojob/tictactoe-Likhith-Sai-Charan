@@ -1,74 +1,55 @@
-document.getElementById("submit").addEventListener("click", startGame);
-document.getElementById("restart").addEventListener("click", restartGame);
+let currentPlayer = 'x';
+let board = ["", "", "", "", "", "", "", "", ""];
+let gameOver = false;
+const player1NameInput = document.getElementById("player1");
+const player2NameInput = document.getElementById("player2");
+const submitButton = document.getElementById("submit");
+const messageDiv = document.querySelector(".message");
 
-let player1, player2, currentPlayer, board, isGameOver;
+// Start Game
+submitButton.addEventListener("click", () => {
+    if (player1NameInput.value.trim() === "" || player2NameInput.value.trim() === "") {
+        alert("Please enter both player names!");
+        return;
+    }
+    
+    messageDiv.textContent = `${player1NameInput.value}, you're up`;
+    document.querySelectorAll(".cell").forEach(cell => cell.addEventListener("click", handleCellClick));
+});
 
-function startGame() {
-    player1 = document.getElementById("player1").value || "Player 1";
-    player2 = document.getElementById("player2").value || "Player 2";
-    currentPlayer = player1;
-    board = ["", "", "", "", "", "", "", "", ""];
-    isGameOver = false;
+// Handle Cell Click
+function handleCellClick(event) {
+    if (gameOver) return;
 
-    document.getElementById("setup").style.display = "none";
-    document.getElementById("game").style.display = "block";
-    document.getElementById("restart").style.display = "none";
-    document.querySelector(".message").textContent = `${currentPlayer}, you're up`;
-
-    document.querySelectorAll(".cell").forEach(cell => {
-        cell.textContent = "";
-        cell.classList.remove("winning");
-        cell.addEventListener("click", handleMove);
-    });
-}
-
-function handleMove(event) {
     const cell = event.target;
-    const index = cell.id - 1;
+    const cellIndex = parseInt(cell.id) - 1;
 
-    if (board[index] || isGameOver) return;
+    if (board[cellIndex] !== "") return; // Ignore clicks on already filled cells
 
-    board[index] = currentPlayer === player1 ? "X" : "O";
-    cell.textContent = board[index];
+    board[cellIndex] = currentPlayer;
+    cell.textContent = currentPlayer;
 
     if (checkWinner()) {
-        document.querySelector(".message").textContent = `${currentPlayer}, congratulations you won! 🎉`;
-        isGameOver = true;
-        document.getElementById("restart").style.display = "block";
+        gameOver = true;
+        messageDiv.textContent = (currentPlayer === 'x' ? player1NameInput.value : player2NameInput.value) + " congratulations you won!";
         return;
     }
 
-    if (!board.includes("")) {
-        document.querySelector(".message").textContent = "It's a draw! 🤝";
-        isGameOver = true;
-        document.getElementById("restart").style.display = "block";
-        return;
-    }
-
-    currentPlayer = currentPlayer === player1 ? player2 : player1;
-    document.querySelector(".message").textContent = `${currentPlayer}, you're up`;
+    // Switch Player
+    currentPlayer = currentPlayer === 'x' ? 'o' : 'x';
+    messageDiv.textContent = (currentPlayer === 'x' ? player1NameInput.value : player2NameInput.value) + ", you're up";
 }
 
+// Check Winning Conditions
 function checkWinner() {
-    const winningPatterns = [
-        [0, 1, 2], [3, 4, 5], [6, 7, 8],
-        [0, 3, 6], [1, 4, 7], [2, 5, 8],
-        [0, 4, 8], [2, 4, 6]
+    const winPatterns = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+        [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+        [0, 4, 8], [2, 4, 6]  // Diagonals
     ];
 
-    for (let pattern of winningPatterns) {
-        let [a, b, c] = pattern;
-        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-            document.getElementById(a + 1).classList.add("winning");
-            document.getElementById(b + 1).classList.add("winning");
-            document.getElementById(c + 1).classList.add("winning");
-            return true;
-        }
-    }
-    return false;
-}
-
-function restartGame() {
-    document.getElementById("setup").style.display = "block";
-    document.getElementById("game").style.display = "none";
+    return winPatterns.some(pattern => {
+        const [a, b, c] = pattern;
+        return board[a] && board[a] === board[b] && board[a] === board[c];
+    });
 }
