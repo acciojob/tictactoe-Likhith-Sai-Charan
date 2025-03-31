@@ -1,5 +1,5 @@
-//your JS code here. If required.
 document.getElementById("submit").addEventListener("click", startGame);
+document.getElementById("restart").addEventListener("click", restartGame);
 
 let player1, player2, currentPlayer, board, isGameOver;
 
@@ -12,6 +12,7 @@ function startGame() {
 
     document.getElementById("setup").style.display = "none";
     document.getElementById("game").style.display = "block";
+    document.getElementById("restart").style.display = "none";
     document.querySelector(".message").textContent = `${currentPlayer}, you're up`;
 
     document.querySelectorAll(".cell").forEach(cell => {
@@ -31,8 +32,16 @@ function handleMove(event) {
     cell.textContent = board[index];
 
     if (checkWinner()) {
-        document.querySelector(".message").textContent = `${currentPlayer}, congratulations you won!`;
+        document.querySelector(".message").textContent = `${currentPlayer}, congratulations you won! 🎉`;
         isGameOver = true;
+        document.getElementById("restart").style.display = "block";
+        return;
+    }
+
+    if (!board.includes("")) {
+        document.querySelector(".message").textContent = "It's a draw! 🤝";
+        isGameOver = true;
+        document.getElementById("restart").style.display = "block";
         return;
     }
 
@@ -56,6 +65,10 @@ function checkWinner() {
             return true;
         }
     }
+    return false;
+}
 
-    return board.every(cell => cell) ? (document.querySelector(".message").textContent = "It's a draw!", true) : false;
+function restartGame() {
+    document.getElementById("setup").style.display = "block";
+    document.getElementById("game").style.display = "none";
 }

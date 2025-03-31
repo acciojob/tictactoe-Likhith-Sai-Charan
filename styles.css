@@ -1,12 +1,16 @@
-/*  your css code here. If applicable */
 body {
     font-family: Arial, sans-serif;
     text-align: center;
+    background-color: #f8f9fa;
 }
 
 .container {
     margin: 50px auto;
-    width: 300px;
+    width: 320px;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
 .board {
@@ -36,4 +40,24 @@ body {
 .message {
     font-size: 20px;
     margin-top: 20px;
+    font-weight: bold;
+}
+
+button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#restart {
+    display: none;
 }
