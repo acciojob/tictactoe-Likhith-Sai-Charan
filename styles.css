@@ -1,6 +1,13 @@
 body {
     font-family: Arial, sans-serif;
     text-align: center;
+    background-color: #f8f8f8;
+}
+
+h1 {
+    font-size: 32px;
+    color: #333;
+    margin-bottom: 20px;
 }
 
 #player-inputs {
